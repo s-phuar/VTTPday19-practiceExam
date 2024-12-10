@@ -7,17 +7,83 @@
 </head>
 <body>
 
-    <form method="POST" action="/add"> 
-        <h1>Enter task details:</h1>
+    <p th:if="${not #strings.isEmpty(taskID)}" data-th-text="'task saved as: ' + ${taskID}"></p>
 
-        <select name="status">
-            <option value="pending">Pending</option>
-            <option value="started">Started</option>
-            <option value="in_progress">Progress</option>
-            <option value="completed">Completed</option>
-        </select>
+    <form method="POST" action="/add" data-th-object="${tdl}">
+
+        <h1>Enter task details:</h1>
+        <table>
+
+            <!-- Display field and global errors (if any) -->
+            <!-- <div th:if="${#fields.hasErrors()}">
+                <ul>
+                    <li th:each="err : ${#fields.errors()}" th:text="${err.defaultMessage}"></li>
+                </ul>
+            </div> -->
+
+
+        <tr>
+            <!-- if add task from scratch, id should be null and filled -->
+            <!-- if updating task, id should be pre-filled, grabbed and sent to add -->
+            <input type="hidden" data-th-field="*{id}" th:value="${tdl.id}">
+        </tr>
+        <tr>
+            <td>Name:</td>
+            <td><input type="text" data-th-field="*{name}" required></td>
+            <p data-th-if="${#fields.hasErrors('name')}"
+                data-th-text="${#fields.errors('name')}">
+            </p>
+
+        </tr>
+        <tr>
+            <td>Description:</td>
+            <td><input type="text" data-th-field="*{description}"></td>
+            <p data-th-if="${#fields.hasErrors('description')}"
+                data-th-text="${#fields.errors('description')}">
+            </p>
+        </tr>
+        <tr>
+            <td>Due date:</td>
+            <td><input type="date" data-th-field="*{dueDate}"></td>
+            <p data-th-if="${#fields.hasErrors('dueDate')}"
+                data-th-text="${#fields.errors('dueDate')}">
+            </p>
+        </tr>
+        <tr>
+            <td>Priority:</td>
+            <td>
+                <select data-th-field="*{priority}">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </td>
+            </tr>
+
+        <tr>
+            <td>Status:</td>
+            <td>
+            <select data-th-field="*{status}">
+                <option value="pending">Pending</option>
+                <option value="started">Started</option>
+                <option value="in_progress">Progress</option>
+                <option value="completed">Completed</option>
+            </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Created at:</td>
+            <td><input type="date" data-th-field="*{createdAt}"></td>
+        </tr>
+        <tr>
+            <td>Updated at:</td>
+            <td><input type="date" data-th-field="*{updatedAt}"></td>
+        </tr>
+
+        </table>
         <button type="submit">go</button>
     </form>
-    
+    <a href="/listing">show listing</a>
+
 </body>
 </html>

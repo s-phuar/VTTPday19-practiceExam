@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form method="POST" action="/loginprocess" data-th-object="${user}">
+        <table>
+            <tr>
+                <td>Username:</td>
+                <td><input type="text" data-th-field="*{username}" required></td>
+            </tr>
+            <tr>
+                <td>Age:</td>
+                <td><input type="number" data-th-field="*{age}" required></td>
+            </tr>
+
+        </table>
+        <button type="submit">go</button>
+    </form>
+    
+</body>
+</html>

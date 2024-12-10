@@ -2,22 +2,40 @@ package VTTPday19.practiceExam.model;
 
 import java.io.StringReader;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import VTTPday19.practiceExam.utils.dateMethods;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public class toDoList {
 
+    // @Size (max=50, message="id must be below 50 characters")
     private String id;
+    @NotBlank (message="please add a task name")
+    @Size (min=10, max=50, message="task name must be below 50 characters")
     private String name;
+    @Size (max=255, message="description must be below 255 characters")
     private String description;
+    //informs Spring that whenever a field of type Date or LocalDate is populated
+    //(either via form submission or query parameters),
+    //the value should be converted from a String in the specified pattern (yyyy-MM-dd) to a Date object.
+    @FutureOrPresent(message="date must be either today or the future")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dueDate;
     private String priority;
     private String status;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createdAt;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date updatedAt;
 
     public String getId() {return id;}
@@ -77,7 +95,7 @@ public class toDoList {
     }
 
     //convert toDoList object into custom json object.toString() (for redis store)
-    public static JsonObject toJson(toDoList tdl){
+    public static JsonObject toJson(toDoList tdl) throws ParseException{
         JsonObject jsonObj = Json.createObjectBuilder()
             .add("id", tdl.getId())
             .add("name", tdl.getName())

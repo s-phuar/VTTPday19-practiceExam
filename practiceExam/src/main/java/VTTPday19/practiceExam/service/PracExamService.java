@@ -3,6 +3,7 @@ package VTTPday19.practiceExam.service;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,21 @@ public class PracExamService {
 
     public void saveJson(toDoList tdl, JsonObject json){
         pracRepo.saveJsonStr(tdl.getId(), json.toString());
+    }
+
+    public toDoList addUUID(toDoList tdl){
+        String uuid = UUID.randomUUID().toString(); //generate a UUID string
+        tdl.setId(uuid);
+        return tdl;
+    }
+
+    public void deleteRecord(String id){
+        pracRepo.deleteRecord(id);
+    }
+
+    public toDoList getRecord(String id) throws ParseException{
+        String jsonString = pracRepo.getRecord(id);
+        return toDoList.toListObjFromRedis(toDoList.toJson(jsonString));
     }
 
 

@@ -8,6 +8,8 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
+import VTTPday19.practiceExam.model.toDoList;
+
 @Repository
 public class PracExamRepository {
 
@@ -27,7 +29,15 @@ public class PracExamRepository {
         return listObj;
     }
 
+    public void deleteRecord(String id){
+        HashOperations<String, String, Object> hashOps = template.opsForHash();
+        hashOps.delete("toDoList", id);
+    }
 
-
+    public String getRecord(String id){
+        HashOperations<String, String, Object> hashOps = template.opsForHash();
+        String jsonStr = (String) hashOps.get("toDoList", id);
+        return jsonStr;
+    }
     
 }
