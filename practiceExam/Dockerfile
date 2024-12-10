@@ -55,6 +55,6 @@ ENTRYPOINT java -jar anything.jar
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD curl -s -f http://localhost:4000/demo/health || exit 1
 
 #when you docker image build, use the correct tag
-#debuggin:   docker logs <container_id> && railway logs
+#debuggin:   docker logs <container_id> && railway logs b
 
 

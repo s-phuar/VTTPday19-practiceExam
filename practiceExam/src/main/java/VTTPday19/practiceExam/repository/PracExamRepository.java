@@ -29,11 +29,13 @@ public class PracExamRepository {
         return listObj;
     }
 
+    //HDEL {toDoList} {id}
     public void deleteRecord(String id){
         HashOperations<String, String, Object> hashOps = template.opsForHash();
         hashOps.delete("toDoList", id);
     }
 
+    //HGET {toDoList} {id}
     public String getRecord(String id){
         HashOperations<String, String, Object> hashOps = template.opsForHash();
         String jsonStr = (String) hashOps.get("toDoList", id);
