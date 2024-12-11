@@ -1,4 +1,5 @@
 FROM openjdk:23-jdk-oracle AS builder
+#FROM exclispe-temurin:23-jdk-noble AS builder
 
 WORKDIR /compileddir
 
@@ -10,6 +11,7 @@ COPY pom.xml .
 COPY .mvn .mvn
 COPY src src
 
+#add executable to all {file/folder name} to treat it as executable
 RUN chmod a+x ./mvnw && ./mvnw package -Dmaven.test.skip=true
 # RUN ./mvnw package -Dmaven.test.skip=true
 
@@ -21,32 +23,41 @@ EXPOSE ${SERVER_PORT}
 
 #2nd build
 FROM openjdk:23-jdk-oracle
+#FROM exclispe-temurin:23-jre-noble
 
 #working directory for 2nd stage
 ARG WORK_DIR=/app
 WORKDIR ${WORK_DIR}
 
-#first arg from entrypoint above, 2nd arg name it anything.jar
+#first arg from entrypoint above(previous container), 2nd arg name it anything.jar
 #copies the 1st stage's jar file (from mvn package) into /app/anything.jar
 COPY --from=builder /compileddir/target/practiceExam-0.0.1-SNAPSHOT.jar anything.jar
 
 # Copy todos.json from the builder stage (assuming it's in /compileddir)
 COPY --from=builder /compileddir/todos.json todos.json
 
+
+#should be the same as app prop
 ENV SERVER_PORT=3000
 EXPOSE ${SERVER_PORT}
 
-
-#overrides the variables in application properties
-ENV weather.api-key=
+#overrides the variables in application properties (this should be palceholder, do not put actual key)
+ENV WEATHER_API_KEY=
 #previously redis.host=localhost
     #my redis is running on host machine outside of docker, cannot use localhost to refer to it
     #so we want to connect redis instance using the host machine's ip address
-ENV spring.data.redis.host=host.docker.internal
-ENV spring.data.redis.port=6379
-ENV spring.data.redis.database=0
-ENV spring.data.redis.username=
-ENV spring.data.redis.password=
+
+ENV SPRING_DATA_REDIS_HOST=host.docker.internal
+ENV SPRING_DATA_REDIS_PORT=6379
+ENV SPRING_DATA_REDIS_DATABSE=0
+ENV SPRING_DATA_REDIS_USERNAME=
+ENV SPRING_DATA_REDIS_PASSWORD=
+
+# ENV spring.data.redis.host=host.docker.internal
+# ENV spring.data.redis.port=6379
+# ENV spring.data.redis.database=0
+# ENV spring.data.redis.username=
+# ENV spring.data.redis.password=
 
 #bring down from copy line (2nd arg)
 ENTRYPOINT java -jar anything.jar
