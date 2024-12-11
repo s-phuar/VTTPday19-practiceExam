@@ -15,8 +15,12 @@ COPY src src
 RUN chmod a+x ./mvnw && ./mvnw package -Dmaven.test.skip=true
 # RUN ./mvnw package -Dmaven.test.skip=true
 
-ENV SERVER_PORT=3000
-EXPOSE ${SERVER_PORT}
+ENV PORT=3000
+EXPOSE ${PORT}
+
+# below Worked previously but because railway uses PORT, hence PORT from railway to passed to PORT in dockerfiler
+# ENV SERVER_PORT=3000
+# EXPOSE ${SERVER_PORT}
 
 #optional if multi stage
 # ENTRYPOINT SEVER_PORT=${SERVER_PORT} java -jar target/inclass-0.0.1-SNAPSHOT.jar
@@ -37,9 +41,12 @@ COPY --from=builder /compileddir/target/practiceExam-0.0.1-SNAPSHOT.jar anything
 COPY --from=builder /compileddir/todos.json todos.json
 
 
-#should be the same as app prop
-ENV SERVER_PORT=3000
-EXPOSE ${SERVER_PORT}
+ENV PORT=3000
+EXPOSE ${PORT}
+
+# below Worked previously but because railway uses PORT, hence PORT from railway to passed to PORT in dockerfiler
+# ENV SERVER_PORT=3000
+# EXPOSE ${SERVER_PORT}
 
 #overrides the variables in application properties (this should be palceholder, do not put actual key)
 ENV WEATHER_API_KEY=
@@ -60,12 +67,12 @@ ENV SPRING_DATA_REDIS_PASSWORD=
 # ENV spring.data.redis.password=
 
 #bring down from copy line (2nd arg)
-ENTRYPOINT java -jar anything.jar
+ENTRYPOINT SERVER_PORT=${PORT} java -jar anything.jar
 
 #docker will check localhost:4000/demo/health for healthiness, container marked as unhealthy if fails
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD curl -s -f http://localhost:4000/demo/health || exit 1
 
 #when you docker image build, use the correct tag
-#debuggin:   docker logs <container_id> && railway logs b
+#debuggin:   docker logs <container_id> && railway logs 
 
 
