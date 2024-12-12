@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+        <form method="POST" action="/articles">
+            <button type="submit">Save Article</button>
+            <div data-th-each="article:${artList}" >
+                <h3><tr data-th-utext="'Article ID: ' + ${article.id}"></tr></h3>
+                <br>
+                <h1><tr data-th-utext="${article.title}"></tr></h1>  
+                <br>
+                <img data-th-src="${article.imageurl}">
+                <br>
+                <tr data-th-utext="${article.body}"></tr>
+                <br>
+                <tr data-th-utext="'Categories: ' + ${article.categories}"></tr>
+                <br>
+                <tr data-th-utext="'Tags: ' + ${article.tags}"></tr>
+                <br>
+                <tr data-th-utext="'Published on: ' + ${article.published_on}"></tr>
+                <br>
+                <tr><a th:href="${article.url}" target="_blank">article link</a></tr>
+                <br>
+                <!-- id is for associating the checkbox with the label -->
+                 <!-- all checked checkboxes will be grouped under this 1 name. Controller determines the structure of the array/list -->
+                <p><input type="checkbox" name="saveArticleIds" th:value="${article.id}">Save this article</p>    
+                <br>
+                <br>
+            </div>
+        </form>
+    
+</body>
+</html>
